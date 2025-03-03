@@ -4,7 +4,7 @@ import rehypeHighlight from 'rehype-highlight';
 import { promises as fs } from 'fs';
 
 export async function generateStaticParams() {  
-    const posts = await fs.readdir(process.cwd() + '/src/pages');
+    const posts = await fs.readdir(process.cwd() + '/public/pages');
 
     return posts.map((post) => ({
         slug: post.slice(0, post.lastIndexOf('.md'))
@@ -14,7 +14,7 @@ export async function generateStaticParams() {
 export default async function BlogPost({params}: {params: Promise<{slug: string}>}) {
 
     const postName = (await params).slug;
-    const file = await fs.readFile(process.cwd() + '/src/pages/' + postName + '.md', 'utf-8');
+    const file = await fs.readFile(process.cwd() + '/public/pages/' + postName + '.md', 'utf-8');
     
     const lines = file.split('\n');
     const title = lines[0];

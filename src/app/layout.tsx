@@ -1,7 +1,6 @@
 import type {Metadata} from 'next';
 
 import './css/github-dark.css';
-import './css/github-markdown-dark.css';
 import './css/globals.css';
 
 export const metadata: Metadata = {
