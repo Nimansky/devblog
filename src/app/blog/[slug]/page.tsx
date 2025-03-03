@@ -1,43 +1,35 @@
-import { Post } from '@/db/schema';
-import { run } from '@/db/connect';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
+import { promises as fs } from 'fs';
 
 export async function generateStaticParams() {  
-    await run().catch((error: Error) => console.error('Error connecting to MongoDB', error));
-    const posts = await Post.find();
+    const posts = await fs.readdir(process.cwd() + '/src/pages');
 
     return posts.map((post) => ({
-        slug: post.url
+        slug: post.slice(0, post.lastIndexOf('.md'))
     }));
 }
 
 export default async function BlogPost({params}: {params: Promise<{slug: string}>}) {
-    await run().catch((error: Error) => console.error('Error connecting to MongoDB', error));
 
-    const url_title = (await params).slug;
+    const postName = (await params).slug;
+    const file = await fs.readFile(process.cwd() + '/src/pages/' + postName + '.md', 'utf-8');
+    
+    const lines = file.split('\n');
+    const title = lines[0];
+    const date = new Date(lines[1]);
+    const content = lines.slice(2).join('\n');
 
-    const post = await Post.find().where('url').equals(url_title);
-
-    if(post.length === 0) {
-        return <p>
-            Post not found
-        </p> 
-    }
-
-    post[0].content = post[0].content.replace("\\n", '\n').replace('\\"', '"').replace("\\'", "'");
-
-    return <div>
+    return <div className="flex justify-center items-center flex-col">
         <p>
-            Title: {post[0].title}
+            Title: {title}
         </p>
         <p>
-            Published: {post[0].date.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric", hour:"numeric", minute:"numeric"})}
+            Published: {date.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric", hour:"numeric", minute:"numeric"})}
         </p>
-        <br/>
         <div className="markdown-body w-[80%]">
-            <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>{post[0].content}</Markdown>
+            <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>{content}</Markdown>
         </div>
     </div>;
 }

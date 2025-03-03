@@ -1,17 +1,23 @@
-import { run } from "@/db/connect";
-import { Post } from "@/db/schema";
 import React from "react";
 import Link from "next/link";
+import { promises as fs } from 'fs';
 
 export default async function Home() {
 
-  await run().catch((error: Error) => console.error('Error connecting to MongoDB', error));
+  const urls = await fs.readdir(process.cwd() + '/src/pages');
 
-  // TEST INSERT
-  // const new_post = new Post({ url: 'new-post-2', title: 'New Post 2', date: Date.now(), content: 'new post 2' });
-  // new_post.save().then((error: Error) => console.log(error)).catch((error: Error) => console.error('Error saving new post', error));
+  const posts: Array<{url: string, title: string, date: Date, content: string}> = []
 
-  const posts = await Post.find();
+  for (const url of urls) {
+    const file = await fs.readFile(process.cwd() + '/src/pages/' + url, 'utf-8');
+    
+    const lines = file.split('\n');
+    const title = lines[0];
+    const date = new Date(lines[1]);
+    const content = lines.slice(2).join('\n');
+
+    posts.push({url: url.slice(0, url.lastIndexOf('.md')), title: title, date: date, content: content});
+  }
 
   return (
     <div>
