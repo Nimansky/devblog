@@ -21,6 +21,7 @@
 /* width */
 ::-webkit-scrollbar {
     width: 7px;
+    height: 7px;
 }
 
 /* Track */
@@ -38,4 +39,122 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.markdown h1 {
+    @apply text-5xl py-4;
+}
+
+.markdown h2 {
+    @apply text-4xl;
+}
+
+.markdown h3 {
+    @apply text-3xl;
+}
+
+.markdown h4 {
+    @apply text-2xl;
+}
+
+.markdown h5 {
+    @apply text-xl;
+}
+
+.markdown h6 {
+    @apply text-lg;
+}
+
+.markdown hr {
+    @apply my-4 border-t-4 border-gray-500;
+}
+
+.markdown ol {
+    @apply list-decimal;
+}
+
+.markdown ul {
+    @apply list-disc;
+}
+
+.markdown ul ul, ol ol, ol ul, ul ol {
+    @apply pl-8;
+}
+
+.markdown .hljs {
+    @apply bg-gray-800 rounded-2xl w-10/12 justify-self-center;
+}
+
+.markdown img {
+    @apply justify-self-center max-w-[80%];
+}
+
+.markdown pre {
+    @apply overflow-x-auto m-4;
+}
+
+.markdown table {
+    @apply justify-self-center m-4;
+    border-spacing: 0;
+    border-collapse: collapse;
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow: auto;
+}
+  
+.markdown td,
+.markdown th {
+    padding: 0;
+}
+
+.markdown table th {
+    font-weight: 600;
+}
+
+.markdown table th,
+.markdown table td {
+    padding: 6px 13px;
+    border: 1px solid #3d444d;
+}
+
+.markdown table td>:last-child {
+    margin-bottom: 0;
+}
+
+.markdown table tr {
+    background-color: #0d1117;
+    border-top: 1px solid #3d444db3;
+}
+
+.markdown table tr:nth-child(2n) {
+    background-color: #151b23;
+}
+
+.markdown table img {
+    background-color: transparent;
+}
+
+.markdown blockquote {
+    @apply border-l-4 border-gray-500 pl-4 my-4;
+}
+
+.markdown a {
+    @apply text-blue-400 underline underline-offset-4;
+}
+
+.markdown a:active {
+    @apply text-blue-500;
+}
+
+.markdown a:visited {
+    @apply text-pink-400;
+}
+
+.markdown a:visited:active {
+    @apply text-pink-500;
+}
+
+.markdown .contains-task-list {
+    @apply list-none;
 }
