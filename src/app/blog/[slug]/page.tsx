@@ -5,8 +5,12 @@ import rehypeHighlight from 'rehype-highlight';
 import { promises as fs } from 'fs';
 import Link from 'next/link';
 
+export const revalidate = 10;
+export const dynamicParams = false;
+export const dynamic = 'auto';
+
 export async function generateStaticParams() {  
-    const posts = await fs.readdir(process.cwd() + '/src/pages');
+    const posts = await fs.readdir(process.cwd() + '/pages');
 
     return posts.map((post) => ({
         slug: post.slice(0, post.lastIndexOf('.md'))
@@ -16,9 +20,20 @@ export async function generateStaticParams() {
 export default async function BlogPost({params}: {params: Promise<{slug: string}>}) {
 
     const postName = (await params).slug;
-    const file = await fs.readFile(process.cwd() + '/src/pages/' + postName + '.md', 'utf-8');
-    const date = (await fs.stat(process.cwd() + '/src/pages/' + postName + '.md')).mtime;
-    
+    let file;
+    let date;
+    try{
+        file = await fs.readFile(process.cwd() + '/pages/' + postName + '.md', 'utf-8');
+        date = (await fs.stat(process.cwd() + '/pages/' + postName + '.md')).mtime;
+    }
+    catch{
+        return (
+            <div>
+                <h1>404</h1>
+                <p>Post not found</p>
+            </div>
+        );
+    }
     const lines = file.split('\n');
     //draft information is not used on the actual blog post page (as of yet, maybe there's a use for this info down the line)
     //const draft = Boolean(lines[0].split(':')[1].trim());

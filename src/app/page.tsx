@@ -4,15 +4,18 @@ import Link from 'next/link';
 
 import { promises as fs } from 'fs';
 
+export const revalidate = 10;
+export const dynamicParams = false;
+ 
 export default async function Home() {
-  
-  const urls = await fs.readdir(process.cwd() + '/src/pages');
+
+  const urls = await fs.readdir(process.cwd() + '/pages');
 
   const posts: Array<{url: string, title: string, date: Date, content: string}> = []
 
   for (const url of urls) {
-    const file = await fs.readFile(process.cwd() + '/src/pages/' + url, 'utf-8');
-    const date = (await fs.stat(process.cwd() + '/src/pages/' + url)).mtime;
+    const file = await fs.readFile(process.cwd() + '/pages/' + url, 'utf-8');
+    const date = (await fs.stat(process.cwd() + '/pages/' + url)).mtime;
     
     const lines = file.split('\n');
     const draft = lines[0].split(':')[1].trim() === 'true';
